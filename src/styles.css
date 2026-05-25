@@ -20,6 +20,10 @@ body {
     linear-gradient(135deg, #f7f1e5 0%, #e8efe9 46%, #eef4f8 100%);
 }
 
+button {
+  font: inherit;
+}
+
 main {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
@@ -84,14 +88,17 @@ h1 {
   line-height: 1.55;
 }
 
-.hero__actions {
+.hero__actions,
+.tag-row,
+.filters,
+.tab-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .hero__actions span,
-.check {
+.badge {
   display: inline-flex;
   gap: 8px;
   align-items: center;
@@ -108,8 +115,12 @@ h1 {
 
 .hero__panel,
 .card,
-.signs,
-.clinical-path > div {
+.clinical-path > div,
+.tab-panel,
+.collapsible,
+.detail-band,
+.exam-detail,
+.table-wrap {
   border: 1px solid rgba(30, 74, 67, 0.14);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.78);
@@ -159,6 +170,12 @@ dd {
   margin-top: 18px;
 }
 
+.overview.mini,
+.etiology-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 20px;
+}
+
 .card {
   padding: 24px;
 }
@@ -169,64 +186,361 @@ dd {
 }
 
 .card h2,
-.split h2,
-.clinical-path h2 {
+.card h3,
+.clinical-path h2,
+.section-title h2,
+.exam-detail h3 {
   margin-bottom: 12px;
   color: #17201f;
-  font-size: 1.6rem;
   line-height: 1.1;
 }
 
+.card h2,
+.clinical-path h2,
+.section-title h2 {
+  font-size: 1.6rem;
+}
+
 .card p,
-.signs p,
-.clinical-path p {
+.clinical-path p,
+.collapsible p,
+.detail-band p,
+.section-title p,
+.exam-detail dd,
+.info li,
+td {
   margin-bottom: 0;
   color: #596663;
   line-height: 1.6;
 }
 
-.split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
-  gap: 28px;
-  margin-top: 54px;
-  align-items: start;
-}
-
-.checklist {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.check {
-  min-height: 48px;
-  padding: 12px 14px;
+.tab-nav {
+  margin: 24px 0;
+  padding: 10px;
+  border: 1px solid rgba(30, 74, 67, 0.14);
   border-radius: 8px;
-  color: #1c3631;
+  background: rgba(247, 241, 229, 0.92);
+  box-shadow: 0 14px 35px rgba(45, 57, 54, 0.09);
+  backdrop-filter: blur(14px);
+}
+
+.tab-nav button,
+.filters button,
+.exam-list button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  color: #28423c;
+  background: transparent;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.tab-nav button {
+  flex: 1 1 160px;
+  padding: 11px 14px;
+}
+
+.tab-nav button:hover,
+.filters button:hover,
+.exam-list button:hover {
+  transform: translateY(-1px);
   background: #fffaf0;
-  font-weight: 700;
 }
 
-.check svg {
-  flex: 0 0 auto;
+.tab-nav button.is-active,
+.filters button.is-active,
+.exam-list button.is-selected {
+  color: #f8fbf8;
+  background: #317463;
+}
+
+.tab-panel {
+  padding: clamp(22px, 4vw, 36px);
+  animation: reveal 220ms ease-out;
+}
+
+.section-title {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.section-title > span {
   color: #a65f2b;
+  font-family: Georgia, serif;
+  font-size: 3.2rem;
+  line-height: 0.9;
 }
 
-.signs {
+.part-grid,
+.exam-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.part-card {
+  min-height: 190px;
+  padding: 20px;
+  border: 1px solid rgba(30, 74, 67, 0.14);
+  border-left: 5px solid #317463;
+  border-radius: 8px;
+  background: #fffaf0;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.part-card:hover,
+.part-card.is-selected {
+  transform: translateY(-2px);
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgba(45, 57, 54, 0.12);
+}
+
+.part-card h3 {
+  margin: 12px 0 8px;
+}
+
+.part-card p {
+  margin: 0;
+  color: #596663;
+  line-height: 1.5;
+}
+
+.part-card--red,
+.collapsible--red,
+.exam-detail--red {
+  border-left-color: #b84a39;
+}
+
+.part-card--blue,
+.collapsible--blue,
+.exam-detail--blue {
+  border-left-color: #3975a6;
+}
+
+.part-card--green,
+.collapsible--green,
+.exam-detail--green {
+  border-left-color: #317463;
+}
+
+.part-card--purple,
+.collapsible--purple,
+.exam-detail--purple {
+  border-left-color: #72529c;
+}
+
+.part-card--orange,
+.collapsible--orange,
+.exam-detail--orange {
+  border-left-color: #a65f2b;
+}
+
+.detail-band {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 16px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(217, 235, 226, 0.9), rgba(255, 250, 240, 0.9));
+}
+
+.detail-band ul,
+.info ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.badge {
+  width: fit-content;
+  min-height: 24px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #1c3631;
+  background: #d9ebe2;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.badge--red {
+  color: #7b2f24;
+  background: #f4d8d0;
+}
+
+.badge--blue {
+  color: #224b6b;
+  background: #d8e8f4;
+}
+
+.badge--orange {
+  color: #74431f;
+  background: #f6ead4;
+}
+
+.badge--purple {
+  color: #4f3871;
+  background: #e6def0;
+}
+
+.filters {
+  margin-bottom: 24px;
+}
+
+.filters button {
+  padding: 8px 14px;
+  border: 1px solid rgba(30, 74, 67, 0.12);
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.manifestation-groups {
+  display: grid;
+  gap: 24px;
+}
+
+.stack {
   display: grid;
   gap: 12px;
+}
+
+.collapsible {
+  overflow: hidden;
+  border-left: 5px solid #317463;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.collapsible > button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 0;
+  color: #17201f;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.collapsible > button > span {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.collapsible svg {
+  flex: 0 0 auto;
+  color: #317463;
+  transition: transform 160ms ease;
+}
+
+.collapsible.is-open svg {
+  transform: rotate(180deg);
+}
+
+.collapsible__body {
+  padding: 0 18px 18px;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid rgba(49, 116, 99, 0.22);
+  border-left: 5px solid #317463;
+  border-radius: 8px;
+  background: #edf6f0;
+}
+
+.info h3 {
+  margin-bottom: 8px;
+}
+
+.info--energy {
+  border-left-color: #a65f2b;
+  background: #fff7e9;
+}
+
+.info--danger {
+  border-left-color: #b84a39;
+  background: #fff0ed;
+}
+
+.exam-layout {
+  grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr);
+  margin-top: 18px;
+}
+
+.exam-list {
+  display: grid;
+  gap: 10px;
+}
+
+.exam-list button {
+  justify-content: flex-start;
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid rgba(30, 74, 67, 0.12);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.exam-detail {
+  min-height: 100%;
   padding: 24px;
+  border-left: 5px solid #317463;
 }
 
-.signs article {
-  padding: 16px 0;
-  border-top: 1px solid rgba(30, 74, 67, 0.12);
+.exam-detail dl {
+  margin-top: 0;
 }
 
-.signs h3 {
-  margin-bottom: 6px;
-  color: #1f3c37;
+.tag-row {
+  margin-top: 20px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+th {
+  padding: 14px;
+  color: #f8fbf8;
+  background: #17201f;
+  text-align: left;
+}
+
+td {
+  padding: 13px 14px;
+  border-top: 1px solid rgba(30, 74, 67, 0.1);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 250, 240, 0.65);
+}
+
+.etiology-grid {
+  display: grid;
+  gap: 16px;
 }
 
 .clinical-path {
@@ -240,6 +554,17 @@ dd {
   padding: 24px;
 }
 
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 820px) {
   main {
     width: min(100% - 24px, 640px);
@@ -248,7 +573,11 @@ dd {
 
   .hero,
   .overview,
-  .split,
+  .overview.mini,
+  .part-grid,
+  .detail-band,
+  .exam-layout,
+  .etiology-grid,
   .clinical-path {
     grid-template-columns: 1fr;
   }
@@ -262,7 +591,8 @@ dd {
     padding: 28px;
   }
 
-  .checklist {
+  .section-title {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
